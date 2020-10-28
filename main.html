@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartment Manager</title>
+    
+</head>
+<body>
+    
+<div class="header">
+    <h1><b>MyManager</b></h1>
+    <p>Welcome to Apartment Management System</p>
+</div>
+<div class="topnav">
+    <a href="contact.html">Contact</a>
+    <a href="report.html">Report a Failure</a>
+    <a href="payDue.html">Pay Due</a>
+    <a href="main.html">Main Page</a>
+    
+    
+    
+</div>
+<div class="row">
+    <div class="column">
+    <fieldset class="fieldset">
+        <legend><h2>Neighbors</h2></legend> 
+    <div>
+        <h4>FLOOR 1</h4>
+        <b><a href="#" onclick="myFunction('flat1')" style="color: #ff9e00;">Flat 1</a></b><br>
+        <h5 id="flat1" style="display:none">Emily Wilson & Tom Wilson</h5><br>
+        <b><a href="#" onclick="myFunction('flat2')" style="color: #ff9e00;">Flat 2</a></b><br>
+        <h5 id="flat2" style="display:none">Chris Baker</h5>
+    </div>
+    <div>
+        <h4>FLOOR 2</h4>
+        <b><a href="#" onclick="myFunction('flat3')" style="color: #ff9e00;">Flat 3</a></b><br>
+        <h5 id="flat3" style="display:none">Laura Brown & Barney Brown</h5><br>
+        <b><a href="#" onclick="myFunction('flat4')" style="color: #ff9e00;">Flat 4</a></b><br>
+        <h5 id="flat4" style="display:none">Adam Henderson & Julia Henderson</h5>
+    </div>
+    <div>
+        <h4>FLOOR 3</h4>
+        <b><a href="#" onclick="myFunction('flat5')" style="color: #ff9e00;">Flat 5</a></b><br>
+        <h5 id="flat5" style="display:none">Alice Brooks</h5><br>
+        <b><a href="#" onclick="myFunction('flat6')" style="color: #ff9e00;">Flat 6</a></b><br>
+        <h5 id="flat6" style="display:none">Lily Burton & Will Burton</h5>
+    </div>
+    </fieldset>
+    </div>
+    <script>
+        function myFunction(flat_id) {
+            var flat = document.getElementById(flat_id);
+            if (flat.style.display === "none") {
+                flat.style.display = "block";
+            } else{
+                flat.style.display = "none";
+            }
+        }
+    </script>
+    <div class="column">
+        <fieldset class="fieldset">
+            <legend><h2>Current Due Amount</h2></legend>
+            50<b>$</b>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend><h2>Current Bills</h2></legend>
+            <strong>Water: </strong>60<b>$</b><br><br>
+            <strong>Electricity: </strong>250<b>$</b><br><br>
+            <strong>Cleaning: </strong>100<b>$</b><br><br>
+            <strong>Maintenance: </strong>150<b>$</b><br><br>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend><h2>Fault Records</h2></legend>
+            <ul>
+                <li>Elevator maintenance has been done.</li><br>
+                <li>Megaphone malfunction fixed.</li><br>
+            </ul>
+        </fieldset>
+    </div>
+    <div class="column">
+    <fieldset class="fieldset">
+        <legend><h2>Announcements</h2></legend>
+        <ul>
+            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet pretium urna. Vivamus venenatis velit nec neque ultricies.</li><br>
+            <li>Eget elementum magna tristique. Quisque vehicula, risus eget aliquam placerat, purus leo tincidunt eros.</li><br>
+            <li>Eget luctus quam orci in velit. Praesent scelerisque tortor sed accumsan convallis.</li><br>
+            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li><br>
+            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet pretium urna. Vivamus venenatis velit nec neque ultricies, 
+                eget elementum magna tristique. Quisque vehicula, risus eget aliquam placerat.</li><br>
+        </ul>
+    </fieldset>
+</div></div>
+<div class="footer">
+        <p style="float: left;">Manager: İsmihan İrem Kürekçi - Floor:2 Flat:3</p>
+        
+    <p style="float: right;"><span id="date_time"></span></p></div>
+    <script>
+        var dt = new Date();
+        document.getElementById("date_time").innerHTML = dt.toLocaleString();
+    </script>
+</div>
+
+</body>
+</html>

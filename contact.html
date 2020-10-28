@@ -1,0 +1,57 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="contact.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+</head>
+<body>
+    <div class="header">
+        <h1><b>MyManager</b></h1>
+        <p>Welcome to Apartment Management System</p>
+    </div>
+    <div class="topnav">
+        <a href="contact.html">Contact</a>
+        <a href="report.html">Report a Failure</a>
+        <a href="payDue.html">Pay Due</a> 
+        <a href="main.html">Main Page</a>
+    </div>
+    <div class="row">
+        <div class="column"></div>
+        <div class="column">
+            <form action="main.html" method="POST">
+        <fieldset class="fieldset">
+            <legend><h2>Contact With Manager</h2></legend> 
+            <input type="text" value="" class="text" id="nameSurname" placeholder="İsmihan İrem Kürekçi" readonly><br>
+            <input type="text" value="" class="text" id="mail" placeholder="kurekci@gmail.com" readonly><br>
+            <textarea class="textarea" id="tarea" placeholder="Please write your message..." required></textarea>
+            <button type="submit" class="button" onclick="myFunction()">Send</button>
+        </fieldset>   
+        </div>
+        
+        <div class="column"></div>
+    </div>
+    <script>
+        function myFunction(){
+            var tarea = document.getElementById("tarea");
+
+            if (tarea.value.length ==0){
+                alert("Please fill in the blank fields");
+            }
+            else{
+                alert("Message sent to manager successfully!")
+            }
+        }
+    </script>
+    </form>
+    <div class="footer">
+        <p style="float: left;">Manager: İsmihan İrem Kürekçi - Floor:2 Flat:3</p>
+        
+    <p style="float: right;"><span id="date_time"></span></p></div>
+    <script>
+        var dt = new Date();
+        document.getElementById("date_time").innerHTML = dt.toLocaleString();
+    </script>
+    </div>
+</body>
+</html>

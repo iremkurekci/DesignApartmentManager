@@ -1,0 +1,39 @@
+body {
+    background-image: url('https://i.hizliresim.com/Tav9GQ.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;  
+    text-align: center;
+    margin-top: 20%;	
+}
+
+form {
+    display: inline-block;
+}
+
+.field{
+    width: 400px;
+    height: 60px;
+    border-radius: 40px;
+    padding-left: 20px;
+    margin-top: 15px;
+    border-color: transparent;
+    background-color: #212529;
+    opacity: 0.8;
+    color: white;
+    font-size: 20px;
+    outline: none;
+}
+
+.button{
+    width: 100px;
+    height: 60px;
+    margin: 30px;
+    padding: 5px;
+    border-radius: 40px;
+    border-color: transparent;
+    background-color: #324376;
+    color: white;
+    font-size: 20px;
+    outline: none;
+}
