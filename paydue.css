@@ -123,28 +123,28 @@ h2{
         width: 100%;
     }
 }
+.drop{
+	border-radius: 40px;
+    margin: 15px;
+    padding: 10px;
+    width: auto;
+    height: 50px;
+    outline: none;
+    border-color: transparent;
+    background-color: #52796f;
+    color: #fffcf2;
+    opacity: 0.8;
+    font-family: tahoma;
+    font-size: 15px;
+}
 
 .text{
-    margin: 15px;
+margin: 15px;
     padding: 10px;
     border-color: transparent;
     border-radius: 40px;
     width: 400px;
     height: 50px;
-    font-size: 15px;
-    background-color: #403d39;
-    opacity: 0.8;
-    color: white;
-    outline: none;
-}
-.textarea{
-    font-family: tahoma;
-    margin: 15px;
-    padding: 20px;
-    border-color: transparent;
-    border-radius: 40px;
-    width: 400px;
-    height: 250px;
     font-size: 15px;
     background-color: #403d39;
     opacity: 0.8;

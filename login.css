@@ -1,5 +1,5 @@
 body {
-    background-image: url('https://i.hizliresim.com/Tav9GQ.jpg');
+    background-color: #ccc5b9;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;  
@@ -8,32 +8,93 @@ body {
 }
 
 form {
-    display: inline-block;
+  border: 3px solid #f1f1f1;
+  display: inline-block;
+  background-color: #fffcf2;
 }
 
-.field{
-    width: 400px;
-    height: 60px;
-    border-radius: 40px;
-    padding-left: 20px;
-    margin-top: 15px;
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.login {
+  background-color: #4CAF50;
+  opacity: 0.9;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+}
+
+.login:hover {
+  background-color: #4CAF50;
+  opacity: 1;
+  
+}
+.signin{
+  background-color: #fe6d73;
+  opacity: 0.9;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  outline: none;
+}
+.signin:hover{
+  background-color: #fe6d73;
+  opacity: 1;
+}
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.password {
+  float: right;
+  padding-top: 16px;
+}
+
+@media screen and (max-width: 300px) {
+  span.password {
+    display: block;
+    float: none;
+  }
+}
+h3{
+  color: #eb5e28;
+}
+
+.drop{
+	border-radius: 40px;
+    margin: 15px;
+    padding: 10px;
+    width: auto;
+    height: 50px;
+    outline: none;
     border-color: transparent;
-    background-color: #212529;
+    background-color: #52796f;
+    color: #fffcf2;
     opacity: 0.8;
-    color: white;
-    font-size: 20px;
-    outline: none;
-}
-
-.button{
-    width: 100px;
-    height: 60px;
-    margin: 30px;
-    padding: 5px;
-    border-radius: 40px;
-    border-color: transparent;
-    background-color: #324376;
-    color: white;
-    font-size: 20px;
-    outline: none;
+    font-family: tahoma;
+    font-size: 15px;
 }

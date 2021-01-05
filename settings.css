@@ -164,3 +164,9 @@ h2{
     margin-bottom: 20px;
     font-size: 15px;
 }
+img{
+    border-radius: 40px;
+    border-color: transparent;
+    outline: none;
+    margin: 20px;
+}
