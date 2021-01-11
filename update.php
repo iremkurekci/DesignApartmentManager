@@ -31,11 +31,17 @@ $result = mysqli_query($con,$login_session);
         $manager_mail = $row_manager['email'];
 
         $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
+$expence = "SELECT expenceAmount FROM expences";
 $result_total = mysqli_query($con,$total);
+$result_expence = mysqli_query($con,$expence);
 $row_total = mysqli_fetch_array($result_total);
+$row_expence = mysqli_fetch_array($result_expence);
 while($row_total = mysqli_fetch_array($result_total)){
-    $totalIncome += $row_total['price']; 
+    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
+                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
+                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']
+                   - $row_expence['expenceAmount']; 
 }
 $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     $result_address = mysqli_query($con,$address_db);
@@ -74,37 +80,44 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
     <fieldset class="fieldset">
         <legend><h2>Update Neighbors</h2></legend> 
+        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
         <select name="flat" class="drop" id="flat" required="required">
             <option selected value="select">Select a flat</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-        </select><br><br>
-      
-        <?php 
-        $selected_person = "SELECT * FROM users WHERE flat='flat'";
-        $result_person = mysqli_query($con,$selected_person);
-                while($row_person = $result_person->fetch_assoc()){
-                $email_person = $row_person['email'];
-                $password_person = $row_person['password'];
-                $nameSurname_person = $row_person['nameSurname'];
-                $role_person = $row_person['role'];
-                }
-                
-        ?>
-        <input type="text" value="" class="text" id="name" name="nameSurname" placeholder="Name Surname" required><br><br>
-        <input type="email" value="" class="text" id="email" name="email" placeholder="E-mail" required><br><br>
-        <input type="text" value="" class="text" id="password" placeholder="Password" name="password" required><br><br>
+            <?php 
+            for($flat = 1; $flat <= 20; $flat++){
+                echo "<option value='$flat'>".$flat."</option>"."<br>";
+            }
+            ?>
+        </select>
+        <input type="submit" class="button" value="Find" name="find"></input>
+        <br><br>
+        </form>
+        <?php
+        if(isset($_POST['find'])){
+    
+            $flat = mysqli_real_escape_string($con,$_POST['flat']);
+        
+               $queryString = "SELECT * FROM users WHERE flat = $flat";
+               $result_flat = mysqli_query($con,$queryString);
+               $row_flat = mysqli_fetch_array($result_flat);
+               $name_flat = $row_flat['nameSurname'];
+               $email_flat = $row_flat['email'];
+               $password_flat = $row_flat['password'];
+               $role_flat = $row_flat['role'];
+               
+            }?>
+        <input type="text" <?php if(isset($_POST['find'])): ?> value="<?php echo $name_flat ?>" <?php endif; ?> class="text" id="name" name="nameSurname" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="Name Surname" <?php endif; ?> required><br><br>
+        <input type="email" <?php if(isset($_POST['find'])): ?> value="<?php echo $email_flat ?>" <?php endif; ?> class="text" id="email" name="email" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="example@gmail.com"<?php endif; ?> required><br><br>
+        <input type="text" <?php if(isset($_POST['find'])): ?> value="<?php echo $password_flat ?>" <?php endif; ?> class="text" id="password" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="Password" <?php endif; ?>name="password" required><br><br>
         
         <select name="role" class="drop" id="role" required="required">
-            <option selected value="">Select A Role</option>
+            <option selected value="<?php echo $role_flat ?>">Select A Role</option>
             <option value="Manager">Manager</option>
             <option value="User">User</option>
         </select><br><br>
+        
         <input type="submit" class="button" value="Update" name="submit"></input>
+        <input type="submit" class="button" value="Add Release" name="release"></input>
     </fieldset>   
     </div>
     
@@ -127,7 +140,13 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
 </script>
 <?php 
 include("config.php");
-
+if(isset($_POST['release'])){
+    $releaseDate =date('Y-m-d H:i:s'); 
+    $queryString = "INSERT INTO users (releaseDate) VALUES ('".$releaseDate."')";
+    echo "<script type='text/javascript'>console.log('$queryString');</script>";
+       $query = $con->prepare($queryString);
+       $query->execute();
+}
 if(isset($_POST['submit'])){
     
     echo "<script type='text/javascript'>console.log('asdasdasd');</script>";

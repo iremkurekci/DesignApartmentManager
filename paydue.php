@@ -30,11 +30,18 @@ $row_amount = mysqli_fetch_array($result_amount);
 $amount = $row_amount['CurrentDueAmount'];
 
 $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
+$expence = "SELECT expenceAmount FROM expences";
 $result_total = mysqli_query($con,$total);
+$result_expence = mysqli_query($con,$expence);
 $row_total = mysqli_fetch_array($result_total);
+$row_expence = mysqli_fetch_array($result_expence);
 while($row_total = mysqli_fetch_array($result_total)){
-    $totalIncome += $row_total['price']; 
+    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
+                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
+                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']
+                   - $row_expence['expenceAmount']; 
+
 
     $payment = "SELECT * FROM dues WHERE userName = '".$nameSurname."' ORDER BY year DESC";
     $result_payment = mysqli_query($con,$payment);
@@ -91,15 +98,15 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <legend><h2>Pay Due</h2></legend> 
         <select name="months" class="drop" id="months" required="required">
             <option selected value="select">Select a Month</option>
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
             <option value="10">October</option>
             <option value="11">November</option>
             <option value="12">December</option>
@@ -108,7 +115,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <option selected value="select">Select a Year</option>
             
             <?php 
-            for($year = 2000; $year <= 2030; $year++){
+            for($year = 2020; $year <= 2030; $year++){
                 echo "<option>".$year."</option>"."<br>";
             }
             ?>
@@ -126,16 +133,10 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
 </div>
 </form>
 <?php 
-
-
             if(isset($_POST['submit'])){
                 $year = mysqli_real_escape_string($con,$_POST['years']);
                 $month = mysqli_real_escape_string($con,$_POST['months']);
-                $username = mysqli_real_escape_string($con,$_POST['name']);
-                $flat = mysqli_real_escape_string($con,$_POST['flat']);
-                $role = mysqli_real_escape_string($con,$_POST['role']);
-                $price = mysqli_real_escape_string($con,$_POST['price']);
-                $queryString = "INSERT INTO dues (year,month,userName,flat,role,price) VALUES ('".$year."','".$month."','".$username."','".$flat."','".$role."','".$price."')";
+                $queryString = "INSERT INTO dues (year,month) VALUES ('".$year."','".$month."','".$username."','".$flat."','".$role."','".$price."')";
                 echo "<script type='text/javascript'>console.log('$queryString');</script>";
                    $query = $con->prepare($queryString);
                    $query->execute();

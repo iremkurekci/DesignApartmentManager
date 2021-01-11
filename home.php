@@ -46,11 +46,17 @@ $result = mysqli_query($con,$login_session);
     $row_announcement = mysqli_fetch_array($result_announcement);
    
     $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
 $result_total = mysqli_query($con,$total);
 $row_total = mysqli_fetch_array($result_total);
-while($row_total = mysqli_fetch_array($result_total)){
-    $totalIncome += $row_total['price']; 
+$expence = "SELECT expenceAmount FROM expences";
+$result_expence = mysqli_query($con,$expence);
+$row_expence = mysqli_fetch_array($result_expence);
+while($row_total = mysqli_fetch_array($result_total) || $row_expence = mysqli_fetch_array($result_expence)){
+    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
+                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
+                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']- $row_expence['expenceAmount'];
+                    
 }
 
 $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
@@ -122,7 +128,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <legend><h2>Fault Records</h2></legend>
             
                 <?php while($row_fault = $result_fault->fetch_assoc()){
-                echo "<ul><li><b>- </b>"."<strong>".$row_fault['faultAbout'].": </strong>".$row_fault['faultRecord']."</li><br><br></ul>"; }?>
+                echo "<b> >> </b>"."<strong>".$row_fault['faultAbout'].": </strong>".$row_fault['faultRecord']." - <strong>".$row_fault['dateTime']."</strong><br><br>"; }?>
                 
         </fieldset>
     </div>
@@ -130,7 +136,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     <fieldset class="fieldset">
         <legend><h2>Announcements</h2></legend>
         <?php while($row_announcement = $result_announcement->fetch_assoc()){
-                echo "<ul><li><b>- </b>".$row_announcement['announcementContent']."</li><br><br><br></ul>"; }?>
+                echo "<b> >> </b>".$row_announcement['announcementContent']." - <strong>".$row_announcement['dateTime']."</strong><br><br>"; }?>
     </fieldset>
 </div></div>
 <br><br>

@@ -29,12 +29,18 @@
         $manager_mail = $row_manager['email'];
 
         $totalIncome = 0;
-        $total = "SELECT price FROM dues";
-        $result_total = mysqli_query($con,$total);
-        $row_total = mysqli_fetch_array($result_total);
-        while($row_total = mysqli_fetch_array($result_total)){
-        $totalIncome += $row_total['price']; 
-        }
+$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
+$expence = "SELECT expenceAmount FROM expences";
+$result_total = mysqli_query($con,$total);
+$result_expence = mysqli_query($con,$expence);
+$row_total = mysqli_fetch_array($result_total);
+$row_expence = mysqli_fetch_array($result_expence);
+while($row_total = mysqli_fetch_array($result_total)){
+    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
+                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
+                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']
+                   - $row_expence['expenceAmount']; 
+}
 
     $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     $result_address = mysqli_query($con,$address_db);
@@ -80,12 +86,12 @@
         <input type="text" value="" class="text" id="password" name="password" placeholder="Password" required><br><br>
         <select name="flat" class="drop" id="flat" required="required">
             <option selected value="select">Select A Flat</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
+            <?php 
+            for($flat = 1; $flat <= 20; $flat++){
+                echo "<option value='$flat'>".$flat."</option>"."<br>";
+            }
+            ?>
+            
         </select><br><br>
         <select name="role" class="drop" id="role" required="required">
             <option selected value="select">Select A Role</option>
@@ -124,7 +130,9 @@ if(isset($_POST['submit'])){
     $password_md5 = md5($password);
     $flat = mysqli_real_escape_string($con,$_POST['flat']);
     $role = mysqli_real_escape_string($con,$_POST['role']);
-       $queryString = "INSERT INTO users (nameSurname,email,password,flat,role) VALUES ('".$nameSurname."','".$email."','".$password_md5."','".$flat."','".$role."')";
+    $entryDate = mysqli_real_escape_string($con,$_POST['entryDate']);
+    $entry = date('Y-m-d H:i:s');
+       $queryString = "INSERT INTO users (nameSurname,email,password,flat,role,entryDate) VALUES ('".$nameSurname."','".$email."','".$password_md5."','".$flat."','".$role."','".$entry."')";
     echo "<script type='text/javascript'>console.log('$queryString');</script>";
        $query = $con->prepare($queryString);
        //$query->bind_param('s',$nameSurname, 's',$email, 's',$password, 'i',$flat, 's',$role);
