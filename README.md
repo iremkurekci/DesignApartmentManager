@@ -1,4 +1,2 @@
 # Project-1_DesignApartmentManager
-IF YOU WANT TO THIS PROGRAM WORKS SMOOTHLY, THEN YOU MUST ONLY PULL THE NEWEST FILES.
-YOU MUST NOT UPLOAD FIRST COMMIT FILES.
-YOU MUST ONLY USE ADD FILES VIA UPLOAD.
+This is an apartment management system. The target is both managers and users in an apartment or a site. This application makes better and easier your management stuffs. 
