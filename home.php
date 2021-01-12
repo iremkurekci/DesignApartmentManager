@@ -26,7 +26,7 @@ $result = mysqli_query($con,$login_session);
 
     $user = "SELECT * FROM users ORDER BY flat ASC";
     $result_user = mysqli_query($con,$user);
-    $row_user = mysqli_fetch_array($result_user);
+
 
     $amount_db = "SELECT * FROM currentdue ORDER BY CurrentDueID DESC LIMIT 0, 1";
     $result_amount = mysqli_query($con,$amount_db);
@@ -35,29 +35,27 @@ $result = mysqli_query($con,$login_session);
 
     $edit = "SELECT * FROM expences";
     $result_edit = mysqli_query($con,$edit);
-    $row_edit = mysqli_fetch_array($result_edit);
 
-    $fault = "SELECT * FROM faultrecord";
+    $fault = "SELECT *, users.nameSurname  FROM faultrecord LEFT JOIN users ON faultrecord.userID=users.Id";
     $result_fault = mysqli_query($con,$fault);
-    $row_fault = mysqli_fetch_array($result_fault);
 
     $announcement = "SELECT * FROM announcements";
     $result_announcement = mysqli_query($con,$announcement);
-    $row_announcement = mysqli_fetch_array($result_announcement);
    
     $totalIncome = 0;
-$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
+$total = "SELECT price FROM dues";
 $result_total = mysqli_query($con,$total);
-$row_total = mysqli_fetch_array($result_total);
-$expence = "SELECT expenceAmount FROM expences";
-$result_expence = mysqli_query($con,$expence);
-$row_expence = mysqli_fetch_array($result_expence);
-while($row_total = mysqli_fetch_array($result_total) || $row_expence = mysqli_fetch_array($result_expence)){
-    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
-                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
-                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']- $row_expence['expenceAmount'];
-                    
+while($row_total = mysqli_fetch_array($result_total)){
+    $totalIncome += $row_total['price'];                   
 }
+$totalExpenceValue= 0;
+$totalExpence = "SELECT expenceAmount FROM expences";
+$result_total = mysqli_query($con,$totalExpence);
+while($row_total = mysqli_fetch_array($result_total)){
+    $totalExpenceValue += $row_total['expenceAmount'];                   
+}
+$totalIncome = $totalIncome - $totalExpenceValue;
+
 
 $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     $result_address = mysqli_query($con,$address_db);
@@ -128,7 +126,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <legend><h2>Fault Records</h2></legend>
             
                 <?php while($row_fault = $result_fault->fetch_assoc()){
-                echo "<b> >> </b>"."<strong>".$row_fault['faultAbout'].": </strong>".$row_fault['faultRecord']." - <strong>".$row_fault['dateTime']."</strong><br><br>"; }?>
+                echo "<b> >> </b>"."<strong>".$row_fault['faultAbout'].": </strong>".$row_fault['faultRecord']." <strong> - </strong>".$row_fault['dateTime']."<i><b> (</b>".$row_fault['nameSurname']."<b>)</b></i><br><br>"; }?>
                 
         </fieldset>
     </div>

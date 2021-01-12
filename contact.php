@@ -28,18 +28,18 @@ $result = mysqli_query($con,$login_session);
         $manager_mail = $row_manager['email'];
 
         $totalIncome = 0;
-$total = "SELECT 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12 FROM dues";
-$expence = "SELECT expenceAmount FROM expences";
+$total = "SELECT price FROM dues";
 $result_total = mysqli_query($con,$total);
-$result_expence = mysqli_query($con,$expence);
-$row_total = mysqli_fetch_array($result_total);
-$row_expence = mysqli_fetch_array($result_expence);
 while($row_total = mysqli_fetch_array($result_total)){
-    $totalIncome += $row_total['01'] + $row_total['02']+ $row_total['03']+ $row_total['04']
-                   + $row_total['05']+ $row_total['06']+ $row_total['07']+ $row_total['08']
-                   + $row_total['09']+ $row_total['10']+ $row_total['11']+ $row_total['12']
-                   - $row_expence['expenceAmount']; 
+    $totalIncome += $row_total['price'];                   
 }
+$totalExpenceValue= 0;
+$totalExpence = "SELECT expenceAmount FROM expences";
+$result_total = mysqli_query($con,$totalExpence);
+while($row_total = mysqli_fetch_array($result_total)){
+    $totalExpenceValue += $row_total['expenceAmount'];                   
+}
+$totalIncome = $totalIncome - $totalExpenceValue;
 $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     $result_address = mysqli_query($con,$address_db);
     $row_address = mysqli_fetch_array($result_address);
