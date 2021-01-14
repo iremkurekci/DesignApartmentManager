@@ -136,6 +136,7 @@ h2{
     opacity: 0.8;
     font-family: tahoma;
     font-size: 15px;
+    display: inline-block;
 }
 
 .text{
@@ -151,6 +152,20 @@ margin: 15px;
     color: white;
     outline: none;
 }
+.text2{
+        margin: 15px;
+        padding: 10px;
+        border-color: transparent;
+        border-radius: 40px;
+        width: 50px;
+        height: 50px;
+        font-size: 15px;
+        background-color: #403d39;
+        opacity: 0.8;
+        color: white;
+        outline: none;
+        float: left;
+ }
 .button{
     background-color: #eb5e28;
     border-color: transparent;

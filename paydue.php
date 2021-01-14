@@ -46,10 +46,6 @@ while($row_total = mysqli_fetch_array($result_total)){
 }
 $totalIncome = $totalIncome - $totalExpenceValue;
 
-    $payment2 = "SELECT DATE_FORMAT(STR_TO_DATE(date, '%d-%m-%Y'), '%d-%m-%Y') AS payingDate FROM dues ORDER BY date DESC";
-                    $result_payment2 = mysqli_query($con,$payment2);
-                    $row_payment2 = mysqli_fetch_array($result_payment2);
-
     $payment = "SELECT * FROM dues WHERE userID = '".$id."' ORDER BY date DESC";
     $result_payment = mysqli_query($con,$payment);
 
@@ -90,18 +86,72 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     <fieldset class="fieldset">
         <legend><h2>Payment History</h2></legend> 
         <?php 
+        $payment = "SELECT * FROM dues WHERE userID = '".$id."' ORDER BY date DESC";
+        $result_payment = mysqli_query($con,$payment);
+        if(mysqli_num_rows($result_payment) == 0){
+            echo "There is no paid due to show.";
+            }
         while($row_payment = mysqli_fetch_array($result_payment)){
             
-            echo "<strong>".$row_payment['date']." - </strong>".$row_payment['price']."<b> $ </b><br><br>"; 
+            echo "<strong>".$row_payment['date']." <b>>></b> </strong>".$row_payment['price']."<b> $ </b><br><br>"; 
         }
         ?>
     </fieldset>
     <fieldset class="fieldset">
         <legend><h2>My Debts</h2></legend> 
         <?php 
-        while($row_payment = mysqli_fetch_array($result_payment)){
+        $payment = "SELECT * FROM dues WHERE userID = '".$id."' ORDER BY date DESC";
+        $result_payment = mysqli_query($con,$payment);
+        if(mysqli_num_rows($result_payment) == 0){
+        echo "There is no dept to show.";
+        }
+        
+        while($row_payment = $result_payment->fetch_assoc()){
             
-            echo "<strong>".$row_payment['date']." - </strong>".$row_payment['price']."<b> $ </b><br><br>"; 
+            for($i = 2020; $i <= 2030; $i++){
+                $year = $i;
+                for($j = 1; $j <= 12; $j++){
+                    if($year < date('Y')){
+                        if($j < 10) {
+                            $month = "0".$j;
+                        }else{
+                            $month = $j;
+                        }
+                        if($row_payment['date'] != $year."-".$month."-01"){
+                            $deptAmount = "SELECT DISTINCT CurrentDueAmount FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) ='".$month."'";
+                            $result_deptAmount = mysqli_query($con,$deptAmount);
+                            $row_deptAmount = mysqli_fetch_array($result_deptAmount);
+    
+                            $message =  "<b>".$year."-".$month."-01 >></b> ".$row_deptAmount['CurrentDueAmount'];
+                            echo $message."<b>$</b><br><br>";
+                            echo '<script type="text/javascript">console.log("'.$message.'");</script>';
+                        }else{
+                            continue;
+                        }
+                    }elseif($year == date('Y')){
+                        if($j <= date('m')){
+                            if($j < 10) {
+                                $month = "0".$j;
+                            }else{
+                                $month = $j;
+                            }
+                            if($row_payment['date'] != $year."-".$month."-01"){
+                                $deptAmount = "SELECT DISTINCT CurrentDueAmount FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) ='".$month."'";
+                                $result_deptAmount = mysqli_query($con,$deptAmount);
+                                $row_deptAmount = mysqli_fetch_array($result_deptAmount);
+        
+                                $message =  "<b>".$year."-".$month."-01 >></b> ".$row_deptAmount['CurrentDueAmount'];
+                                echo $message."<b>$</b><br><br>";
+                                echo '<script type="text/javascript">console.log("'.$message.'");</script>';
+                            }else{
+                                continue;
+                            }
+                        }
+                    }else{
+                        continue;
+                    }
+                }
+            }
         }
         ?>
     </fieldset>    

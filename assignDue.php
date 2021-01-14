@@ -82,10 +82,18 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <?php 
                  if(isset($_POST["submit"])){
                     $amount = mysqli_real_escape_string($con,$_POST['amount']);
-                    $queryString = "INSERT INTO currentdue (CurrentDueAmount) VALUES ('".$amount."')";
-    echo "<script type='text/javascript'>console.log('$queryString');</script>";
-       $query = $con->prepare($queryString);
-       $query->execute();
+                    $date = date('Y-m-d');
+                    $queryString_ = "SELECT * FROM currentdue WHERE date ='".$date."' LIMIT 1";
+                    echo '<script type="text/javascript">console.log("'.$queryString_.'");</script>';
+                    $result_num = mysqli_query($con,$queryString_);
+                    if(mysqli_fetch_row($result_num)){
+                        echo '<script>alert("There is already a defined due amount for this month.")</script>'; 
+                    }else{
+                        $queryString = "INSERT INTO currentdue (CurrentDueAmount) VALUES ('".$amount."')";
+                        echo "<script type='text/javascript'>console.log('$queryString');</script>";
+                           $query = $con->prepare($queryString);
+                           $query->execute();
+                    }
                  }
             ?>
             </form>

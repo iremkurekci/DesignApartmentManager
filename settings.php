@@ -91,7 +91,7 @@ width="100" height="100" style="border-radius: 20px; border-color:transparent; m
 <br>
 <div style="margin-top: 30px; margin:auto; width: 60%;">
 <span style="float: left;"><a href="followDue.php" style="color: #252422; font-family: tahoma; margin-right:115px;"><img alt="FollowDues_image" src="https://i.hizliresim.com/GlU5O7.png" 
-width="100" height="100" style="border-radius: 20px; border-color:transparent; margin:20px; outline:none;"><br>Follow Dues</a></span>
+width="100" height="100" style="border-radius: 20px; border-color:transparent; margin:20px; outline:none;"><br>Dues & Users</a></span>
 <span style="float: left;"><a href="changeAddress.php" style="color: #252422; font-family: tahoma; margin-right:80px;"><img alt="ChangeAddress_image" src="https://i.hizliresim.com/ecx2WQ.png" 
 width="100" height="100" style="border-radius: 20px; border-color:transparent; margin:20px; outline:none;"><br>Change Address</a></span>
 <span style="float: left;"><a href="messagebox.php" style="color: #252422; font-family: tahoma; margin-right:70px;"><img alt="FollowMembers_image" src="https://i.hizliresim.com/kZIjfr.jpg" 
