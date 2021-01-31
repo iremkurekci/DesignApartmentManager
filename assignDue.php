@@ -23,9 +23,10 @@ $result = mysqli_query($con,$login_session);
         $nameSurname = $row['nameSurname'];
         $role = $row['role'];
         $flat = $row['flat'];
-
+        
+        
         $totalIncome = 0;
-        $total = "SELECT price FROM dues";
+        $total = "SELECT price FROM dues WHERE ispaid='1'";
         $result_total = mysqli_query($con,$total);
         while($row_total = mysqli_fetch_array($result_total)){
             $totalIncome += $row_total['price'];                   
@@ -82,17 +83,30 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <?php 
                  if(isset($_POST["submit"])){
                     $amount = mysqli_real_escape_string($con,$_POST['amount']);
+                    $year = date('Y');
+                    $month = date('m');
                     $date = date('Y-m-d');
-                    $queryString_ = "SELECT * FROM currentdue WHERE date ='".$date."' LIMIT 1";
-                    echo '<script type="text/javascript">console.log("'.$queryString_.'");</script>';
+                    $queryString_ = "SELECT * FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) = '".$month."' LIMIT 1";
+                    //echo '<script type="text/javascript">console.log("'.$queryString_.'");</script>';
                     $result_num = mysqli_query($con,$queryString_);
                     if(mysqli_fetch_row($result_num)){
                         echo '<script>alert("There is already a defined due amount for this month.")</script>'; 
                     }else{
                         $queryString = "INSERT INTO currentdue (CurrentDueAmount) VALUES ('".$amount."')";
-                        echo "<script type='text/javascript'>console.log('$queryString');</script>";
+                        
+                        $sql = mysqli_query($con, "SELECT * FROM users");
+                        $new_array = array();
+                        while($row = mysqli_fetch_array($sql)){
+                        $new_array[$row['Id']] = $row['Id'];
+                        //echo '<script type="text/javascript">console.log("'.$new_array[$row['Id']].'");</script>';
+                        $queryString2 = "INSERT INTO dues (userID, date, price) VALUES ('".$row['Id']."','".$date."','".$amount."')";
+                        echo '<script type="text/javascript">console.log("'.$queryString2.'");</script>';
+                        $query2 = $con->prepare($queryString2);
+                        $query2->execute();
+                    };
                            $query = $con->prepare($queryString);
                            $query->execute();
+
                     }
                  }
             ?>

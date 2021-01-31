@@ -30,7 +30,7 @@ $result = mysqli_query($con,$login_session);
         $manager_mail = $row_manager['email'];
 
         $totalIncome = 0;
-        $total = "SELECT price FROM dues";
+        $total = "SELECT price FROM dues WHERE ispaid='1'";
         $result_total = mysqli_query($con,$total);
         while($row_total = mysqli_fetch_array($result_total)){
             $totalIncome += $row_total['price'];                   
@@ -94,18 +94,16 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <script>
         <?php
         if(isset($_POST['find'])){
-    
-            $flat = mysqli_real_escape_string($con,$_POST['flat']);
-        
-               $queryString = "SELECT * FROM users WHERE flat = $flat";
-               $result_flat = mysqli_query($con,$queryString);
-               $row_flat = mysqli_fetch_array($result_flat);
-               $name_flat = $row_flat['nameSurname'];
-               $email_flat = $row_flat['email'];
-               $password_flat = $row_flat['password'];
-               $role_flat = $row_flat['role'];
-               
-            }?>
+                $flat = mysqli_real_escape_string($con,$_POST['flat']);
+            
+                   $queryString = "SELECT * FROM users WHERE flat = $flat";
+                   $result_flat = mysqli_query($con,$queryString);
+                   $row_flat = mysqli_fetch_array($result_flat);
+                   $name_flat = $row_flat['nameSurname'];
+                   $email_flat = $row_flat['email'];
+                   $password_flat = $row_flat['password'];
+                   $role_flat = $row_flat['role'];
+        }?>
         
     
     function myFunction(){
@@ -145,13 +143,18 @@ include("config.php");
 
 if(isset($_POST['submit'])){
     
-    $flat = mysqli_real_escape_string($con,$_POST['flat']);
-
-       $queryString = "DELETE FROM users WHERE flat = $flat";
-    echo "<script type='text/javascript'>console.log('$queryString');</script>";
+    $nameSurname = mysqli_real_escape_string($con,$_POST['nameSurname']);
+    $queryS = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='1' AND users.nameSurname='".$nameSurname."'";
+    echo '<script type="text/javascript">console.log("'.$queryS.'");</script>';
+    $resultQuery =  mysqli_query($con,$queryS);
+    if(mysqli_num_rows($resultQuery) == 0){
+        $queryString = "DELETE FROM users WHERE nameSurname = '".$nameSurname."'";
+    echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
+    }else{
+        echo '<script>alert("This user has some unpaid dues. Please pay them before deleting.")</script>'; 
+    }
        $query = $con->prepare($queryString);
        $query->execute();
-       
     }?>
 </form>
 <br><br>

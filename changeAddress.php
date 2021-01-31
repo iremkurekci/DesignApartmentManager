@@ -30,7 +30,7 @@ $result = mysqli_query($con,$login_session);
     $address = $row_address['address'];
 
     $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT price FROM dues WHERE ispaid='1'";
 $result_total = mysqli_query($con,$total);
 while($row_total = mysqli_fetch_array($result_total)){
     $totalIncome += $row_total['price'];                   

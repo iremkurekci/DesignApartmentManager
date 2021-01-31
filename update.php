@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Update Neighbors</title>
@@ -31,7 +31,7 @@ $result = mysqli_query($con,$login_session);
         $manager_mail = $row_manager['email'];
 
         $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT price FROM dues WHERE ispaid='1'";
 $result_total = mysqli_query($con,$total);
 while($row_total = mysqli_fetch_array($result_total)){
     $totalIncome += $row_total['price'];                   
@@ -104,8 +104,8 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
                $email_flat = $row_flat['email'];
                $password_flat = $row_flat['password'];
                $role_flat = $row_flat['role'];
-               
-            }?>
+            }
+            ?>
         <input type="text" <?php if(isset($_POST['find'])): ?> value="<?php echo $name_flat ?>" <?php endif; ?> class="text" id="name" name="nameSurname" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="Name Surname" <?php endif; ?> required><br><br>
         <input type="email" <?php if(isset($_POST['find'])): ?> value="<?php echo $email_flat ?>" <?php endif; ?> class="text" id="email" name="email" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="example@gmail.com"<?php endif; ?> required><br><br>
         <input type="text" <?php if(isset($_POST['find'])): ?> value="<?php echo $password_flat ?>" <?php endif; ?> class="text" id="password" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="Password" <?php endif; ?>name="password" required><br><br>
@@ -141,9 +141,16 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
 <?php 
 include("config.php");
 if(isset($_POST['release'])){
-    $releaseDate =date('Y-m-d H:i:s'); 
-    $queryString = "INSERT INTO users (releaseDate) VALUES ('".$releaseDate."')";
-    echo "<script type='text/javascript'>console.log('$queryString');</script>";
+    $releaseDate =date('Y-m-d'); 
+    $nameSurname = mysqli_real_escape_string($con,$_POST['nameSurname']);
+    $queryS = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='1' AND users.nameSurname='".$nameSurname."'";
+    echo '<script type="text/javascript">console.log("'.$queryS.'");</script>';
+    $resultQuery =  mysqli_query($con,$queryS);
+    if(mysqli_num_rows($resultQuery) == 0){
+    $queryString = "UPDATE users SET releaseDate = '".$releaseDate."' WHERE nameSurname='".$nameSurname."'";
+    }else{
+        echo '<script>alert("This user has some unpaid dues. Please pay them before releasing.")</script>'; 
+    }
        $query = $con->prepare($queryString);
        $query->execute();
 }
@@ -157,7 +164,8 @@ if(isset($_POST['submit'])){
     $flat = mysqli_real_escape_string($con,$_POST['flat']);
     $role = mysqli_real_escape_string($con,$_POST['role']);
        $queryString = "UPDATE users SET nameSurname = '$nameSurname', email = '$email', password = '$password_md5', flat = '$flat', role = '$role' WHERE flat = $flat";
-    echo "<script type='text/javascript'>console.log('$queryString');</script>";
+       echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
+
        $query = $con->prepare($queryString);
        //$query->bind_param('s',$nameSurname, 's',$email, 's',$password, 'i',$flat, 's',$role);
        //$query ->bind_param('sssis',$nameSurname,$email,$password,$flat,$role);

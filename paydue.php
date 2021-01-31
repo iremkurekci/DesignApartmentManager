@@ -33,7 +33,7 @@ $row_amount = mysqli_fetch_array($result_amount);
 $amount = $row_amount['CurrentDueAmount'];
 
 $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT price FROM dues WHERE ispaid='1'";
 $result_total = mysqli_query($con,$total);
 while($row_total = mysqli_fetch_array($result_total)){
     $totalIncome += $row_total['price'];                   
@@ -86,71 +86,31 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
     <fieldset class="fieldset">
         <legend><h2>Payment History</h2></legend> 
         <?php 
-        $payment = "SELECT * FROM dues WHERE userID = '".$id."' ORDER BY date DESC";
-        $result_payment = mysqli_query($con,$payment);
-        if(mysqli_num_rows($result_payment) == 0){
-            echo "There is no paid due to show.";
+        $dept = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='1' AND dues.userID = '".$id."' ORDER BY date DESC";
+        $result_dept = mysqli_query($con,$dept);
+        
+        if(mysqli_num_rows($result_dept) == 0){
+            echo "There is no paid due to show. Please pay your debts as soon as possible.";
+        }else{
+            while($row_dept = $result_dept->fetch_assoc()){
+                
+                echo "<strong>".$row_dept['date']."</strong><b> - </b>".$row_dept['price']."<b>$ / </b>".$row_dept['nameSurname']."<br><br>"; 
             }
-        while($row_payment = mysqli_fetch_array($result_payment)){
-            
-            echo "<strong>".$row_payment['date']." <b>>></b> </strong>".$row_payment['price']."<b> $ </b><br><br>"; 
         }
         ?>
     </fieldset>
     <fieldset class="fieldset">
         <legend><h2>My Debts</h2></legend> 
         <?php 
-        $payment = "SELECT * FROM dues WHERE userID = '".$id."' ORDER BY date DESC";
-        $result_payment = mysqli_query($con,$payment);
-        if(mysqli_num_rows($result_payment) == 0){
-        echo "There is no dept to show.";
-        }
+        $dept = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='0' AND dues.userID = '".$id."' ORDER BY date DESC";
+        $result_dept = mysqli_query($con,$dept);
         
-        while($row_payment = $result_payment->fetch_assoc()){
-            
-            for($i = 2020; $i <= 2030; $i++){
-                $year = $i;
-                for($j = 1; $j <= 12; $j++){
-                    if($year < date('Y')){
-                        if($j < 10) {
-                            $month = "0".$j;
-                        }else{
-                            $month = $j;
-                        }
-                        if($row_payment['date'] != $year."-".$month."-01"){
-                            $deptAmount = "SELECT DISTINCT CurrentDueAmount FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) ='".$month."'";
-                            $result_deptAmount = mysqli_query($con,$deptAmount);
-                            $row_deptAmount = mysqli_fetch_array($result_deptAmount);
-    
-                            $message =  "<b>".$year."-".$month."-01 >></b> ".$row_deptAmount['CurrentDueAmount'];
-                            echo $message."<b>$</b><br><br>";
-                            echo '<script type="text/javascript">console.log("'.$message.'");</script>';
-                        }else{
-                            continue;
-                        }
-                    }elseif($year == date('Y')){
-                        if($j <= date('m')){
-                            if($j < 10) {
-                                $month = "0".$j;
-                            }else{
-                                $month = $j;
-                            }
-                            if($row_payment['date'] != $year."-".$month."-01"){
-                                $deptAmount = "SELECT DISTINCT CurrentDueAmount FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) ='".$month."'";
-                                $result_deptAmount = mysqli_query($con,$deptAmount);
-                                $row_deptAmount = mysqli_fetch_array($result_deptAmount);
-        
-                                $message =  "<b>".$year."-".$month."-01 >></b> ".$row_deptAmount['CurrentDueAmount'];
-                                echo $message."<b>$</b><br><br>";
-                                echo '<script type="text/javascript">console.log("'.$message.'");</script>';
-                            }else{
-                                continue;
-                            }
-                        }
-                    }else{
-                        continue;
-                    }
-                }
+        if(mysqli_num_rows($result_dept) == 0){
+            echo "There is no unpaid due to show. Thank you for your payings.";
+        }else{
+            while($row_dept = $result_dept->fetch_assoc()){
+                
+                echo "<strong>".$row_dept['date']."</strong><b> - </b>".$row_dept['price']."<b>$ / </b>".$row_dept['nameSurname']."<br><br>"; 
             }
         }
         ?>
@@ -220,22 +180,17 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
                 $year = mysqli_real_escape_string($con,$_POST['year']);
                 
 
-                $queryString = "SELECT * FROM dues WHERE YEAR(date) ='".$year."' AND MONTH(date) = '".$month."' AND userID='".$id."' LIMIT 1";
+                $queryString = "SELECT * FROM dues WHERE YEAR(date) ='".$year."' AND MONTH(date) = '".$month."' AND ispaid='1' AND userID='".$id."' LIMIT 1";
                 echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
                 $result_num = mysqli_query($con,$queryString);
                 
                 if(mysqli_fetch_row($result_num)){
-                    echo '<script>alert("This due already paid.")</script>'; 
+                    echo '<script>alert("This due is already paid.")</script>'; 
                 }else{
                 $month = mysqli_real_escape_string($con,$_POST['month']);
                 $year = mysqli_real_escape_string($con,$_POST['year']);
-                $queryString2 = "SELECT date,CurrentDueAmount FROM currentdue WHERE YEAR(date) ='".$year."' AND MONTH(date) ='".$month."'";
-                $result_amount = mysqli_query($con,$queryString2);
-                $row_amount = mysqli_fetch_array($result_amount); 
-                $price = $row_amount['CurrentDueAmount']; 
-
-                    $date = "$year"."-"."$month"."-01"; 
-                    $queryString_ = "INSERT INTO dues (userID, date, price) VALUES ('".$id."','".$date."','".$price."')";
+           
+                    $queryString_ = "UPDATE dues SET ispaid = '1' WHERE userID='".$id."' AND YEAR(date) ='".$year."' AND MONTH(date) = '".$month."'";
                     echo '<script type="text/javascript">console.log("'.$queryString_.'");</script>';
                    $query = $con->prepare($queryString_);
                    $query->execute();

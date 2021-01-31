@@ -47,7 +47,7 @@ $result = mysqli_query($con,$login_session);
     
 
     $totalIncome = 0;
-$total = "SELECT price FROM dues";
+$total = "SELECT price FROM dues WHERE ispaid='1'";
 $result_total = mysqli_query($con,$total);
 while($row_total = mysqli_fetch_array($result_total)){
     $totalIncome += $row_total['price'];                   
@@ -96,7 +96,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <div class="row">
         <div class="column">
         <fieldset class="fieldset">
-        <legend><h2>Query Results</h2></legend> 
+        <legend><h2>Query</h2></legend> 
 <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 <select name="months" class="drop" id="months" required="required">
             <option selected value="select">Select a Month</option>
@@ -117,7 +117,7 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             <option selected value="select">Select a Year</option>
             
             <?php 
-            for($year = 2020; $year <= 2030; $year++){
+            for($year = 2015; $year <= 2030; $year++){
                 echo "<option>".$year."</option>"."<br>";
             }
             ?>
@@ -129,72 +129,17 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
             $month = mysqli_real_escape_string($con,$_POST['months']);
             $year = mysqli_real_escape_string($con,$_POST['years']);;             
             }?>
-        <nav style="margin-right: 100px;">
+        <nav style="margin-right: 80px;">
         <input type="text" <?php if(isset($_POST['find'])): ?>value="<?php echo $month?>"<?php endif; ?> class="text2" id="month" name="month" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="" <?php endif; ?> readonly>
         <input type="text" <?php if(isset($_POST['find'])): ?>value="<?php echo $year?>"<?php endif; ?> class="text2" id="year" name="year" <?php if(!isset($_POST['submit']) || !isset($_POST['find'])): ?> value="" <?php endif; ?> readonly>
         </nav><br>
-        <nav style="margin-right: 0px;">
-            
-            <input type="submit" class="button" id="userEntry" name="userEntry" value="User Query as Entry Date" style="width:220px;">
-            <input type="submit" class="button" id="userRelease" name="userRelease" value="User Query as Release Date" style="width:220px;"><br>
-            <input type="submit" class="button" id="dueQuery" name="dueQuery" value="Due Query">
+        <nav style="margin:0;">
+            <input type="submit" class="button" id="userEntry" name="userEntry" value="Entries" style="width:auto; float:left; margin:20;">
+            <input type="submit" class="button" id="userRelease" name="userRelease" value="Releases" style="width:auto; float:left; margin:20;">
+            <input type="submit" class="button" id="dueQuery" name="dueQuery" value="Queries " style="width:auto; float:right; margin:20;">
         </nav>
         <br><br><br>
 </form>
-<?php 
-            if(isset($_POST['userEntry'])){
-                if(mysqli_num_rows($result_payer) == 0){
-                    echo "There is no result.";
-                    }else{
-                        $month = mysqli_real_escape_string($con,$_POST['month']);
-                $year = mysqli_real_escape_string($con,$_POST['year']);
-                
-                $queryString = "SELECT * FROM users WHERE YEAR(entryDate) ='".$year."' AND MONTH(entryDate) = '".$month."'";
-                $result_entry = mysqli_query($con,$queryString);
-                echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
-                while($row_entry = $result_entry->fetch_assoc()){
-            
-                    echo "<strong>".$row_entry['nameSurname']."</strong> - No: ".$row_entry['flat']." - ".$row_entry['email']."<br><br>"; 
-                }
-                    }
-                
-            }
-                if(isset($_POST['userRelease'])){
-                    if(mysqli_num_rows($result_payer) == 0){
-                        echo "There is no result.";
-                        }else{
-                    $month = mysqli_real_escape_string($con,$_POST['month']);
-                    $year = mysqli_real_escape_string($con,$_POST['year']);
-                    
-                    $queryString = "SELECT * FROM users WHERE YEAR(releaseDate) ='".$year."' AND MONTH(releaseDate) = '".$month."'";
-                    $result_release = mysqli_query($con,$queryString);
-                    echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
-                    while($row_release = $result_release->fetch_assoc()){
-                
-                        echo "<strong>".$row_release['nameSurname']."</strong>"." - ".$row_release['email']."<br><br>"; 
-                    }
-                }
-                }
-                if(isset($_POST['dueQuery'])){
-                    if(mysqli_num_rows($result_payer) == 0){
-                        echo "There is no result.";
-                        }else{
-                    $month = mysqli_real_escape_string($con,$_POST['month']);
-                    $year = mysqli_real_escape_string($con,$_POST['year']);
-                    
-                    $queryString = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE YEAR(date) ='".$year."' AND MONTH(date) = '".$month."'";
-                    $result_due = mysqli_query($con,$queryString);
-                     
-                    while($row_due = $result_due->fetch_assoc()){
-                
-                        echo "<strong>".$row_due['date']."</strong><b> - </b>".$row_due['price']."<b> / </b>".$row_due['nameSurname']."<br><br>"; 
-                    }
-                }
-                }
-                if(!isset($_POST['dueQuery']) || !isset($_POST['userRelease']) || !isset($_POST['userEntry'])){
-                    echo "Select a date and click related button.";
-                }
-            ?>
         </fieldset>  
     </div>
         <div class="column">
@@ -202,52 +147,49 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <legend><h2>Query Results</h2></legend> 
         <?php 
             if(isset($_POST['userEntry'])){
-                if(mysqli_num_rows($result_payer) == 0){
-                    echo "There is no result.";
-                    }else{
-                        $month = mysqli_real_escape_string($con,$_POST['month']);
+                $month = mysqli_real_escape_string($con,$_POST['month']);
                 $year = mysqli_real_escape_string($con,$_POST['year']);
-                
                 $queryString = "SELECT * FROM users WHERE YEAR(entryDate) ='".$year."' AND MONTH(entryDate) = '".$month."'";
                 $result_entry = mysqli_query($con,$queryString);
+                if(mysqli_num_rows($result_entry) == 0){
+                    echo "There is no result. ";
+                    }else{
+                        echo "<strong><u> Entry Date : ".$month."/".$year."</u></strong><br><br>";
                 echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
                 while($row_entry = $result_entry->fetch_assoc()){
-            
-                    echo "<strong>".$row_entry['nameSurname']."</strong> - No: ".$row_entry['flat']." - ".$row_entry['email']."<br><br>"; 
+                    echo "<strong>".$row_entry['nameSurname']."</strong> - No: ".$row_entry['flat']."<i> (".$row_entry['entryDate'].")</i><br><br>"; 
                 }
                     }
                 
             }
                 if(isset($_POST['userRelease'])){
-                    if(mysqli_num_rows($result_payer) == 0){
-                        echo "There is no result.";
-                        }else{
                     $month = mysqli_real_escape_string($con,$_POST['month']);
                     $year = mysqli_real_escape_string($con,$_POST['year']);
-                    
                     $queryString = "SELECT * FROM users WHERE YEAR(releaseDate) ='".$year."' AND MONTH(releaseDate) = '".$month."'";
-                    $result_release = mysqli_query($con,$queryString);
-                    echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
-                    while($row_release = $result_release->fetch_assoc()){
-                
-                        echo "<strong>".$row_release['nameSurname']."</strong>"." - ".$row_release['email']."<br><br>"; 
-                    }
+                    $result_entry = mysqli_query($con,$queryString);
+                    if(mysqli_num_rows($result_entry) == 0){
+                        echo "There is no result. ";
+                        }else{
+                            echo "<strong><u> Release Date : ".$month."/".$year."</u></strong><br><br>";
+                            echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
+                            while($row_entry = $result_entry->fetch_assoc()){
+                                echo "<strong>".$row_entry['nameSurname']."</strong> - No: ".$row_entry['flat']."<i> (".$row_entry['releaseDate'].")</i><br><br>"; 
+                            }
                 }
                 }
                 if(isset($_POST['dueQuery'])){
-                    if(mysqli_num_rows($result_payer) == 0){
-                        echo "There is no result.";
-                        }else{
                     $month = mysqli_real_escape_string($con,$_POST['month']);
                     $year = mysqli_real_escape_string($con,$_POST['year']);
-                    
-                    $queryString = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE YEAR(date) ='".$year."' AND MONTH(date) = '".$month."'";
-                    $result_due = mysqli_query($con,$queryString);
-                     
-                    while($row_due = $result_due->fetch_assoc()){
-                
-                        echo "<strong>".$row_due['date']."</strong><b> - </b>".$row_due['price']."<b> / </b>".$row_due['nameSurname']."<br><br>"; 
-                    }
+                    $queryString = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='0' AND YEAR(date) ='".$year."' AND MONTH(date) = '".$month."' ORDER BY date DESC";
+                    $result_entry = mysqli_query($con,$queryString);
+                    if(mysqli_num_rows($result_entry) == 0){
+                        echo "There is no result. ";
+                        }else{
+                            echo "<strong><u> Depts as Date : ".$month."/".$year."</u></strong><br><br>";
+                            echo '<script type="text/javascript">console.log("'.$queryString.'");</script>';
+                            while($row_entry = $result_entry->fetch_assoc()){
+                                echo "<strong>".$row_entry['nameSurname']."</strong> <b>-</b> ".$row_entry['price']."<b>$</b><i> (".$row_entry['date'].")</i><br><br>"; 
+                            }
                 }
                 }
                 if(!isset($_POST['dueQuery']) || !isset($_POST['userRelease']) || !isset($_POST['userEntry'])){
@@ -262,11 +204,16 @@ $address_db = "SELECT * FROM address ORDER BY addressID DESC LIMIT 0, 1";
         <legend><h2>All Depts</h2></legend> 
     <div>
         <?php
-        $dept = "SELECT * FROM dues WHERE YEAR(date) = 0000 AND MONTH(date) = 00 ORDER BY date DESC";
+        $dept = "SELECT *,.users.nameSurname FROM dues LEFT JOIN users ON dues.userID=users.Id WHERE ispaid='0' ORDER BY date DESC";
         $result_dept = mysqli_query($con,$dept);
         
         if(mysqli_num_rows($result_dept) == 0){
-            echo "There is no paid due to show.";
+            echo "There is no unpaid due to show.";
+        }else{
+            while($row_dept = $result_dept->fetch_assoc()){
+                
+                echo "<strong>".$row_dept['date']."</strong><b> - </b>".$row_dept['price']."<b>$ / </b>".$row_dept['nameSurname']."<br><br>"; 
+            }
         }
         ?>
 </div>
